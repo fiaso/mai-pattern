@@ -19,7 +19,8 @@ $body = function () use ($productInfo, $isInBasket, $path) {
     echo '
         </form>
         <br/>
-        <a href="' . $path('product_list') . '">Вернуться к списку</a>
+        <a href="' . $path('product_list') . '">Другие товары</a>
+        <a href="' . $path('product_info_all') . '">Описание курсов</a>
         <br />
         <br />
         <a href="' . $path('product_into_social_network', ['network' => ISocialNetwork::SOCIAL_NETWORK_VK]) . '?course=' . $productInfo->getName() . '&page_num=' . $productInfo->getId() . '">Поделиться в VK</a><br />

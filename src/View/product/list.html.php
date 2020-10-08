@@ -4,9 +4,7 @@
 $body = function () use ($productList, $path) {
     ?>
     <table cellpadding="40" cellspacing="0" border="0">
-        <tr><td colspan="3" align="center">
-                <a href="<?= $path('product_info_all') ?>">Наши курсы</a>
-            </td></tr>
+        <tr><td colspan="3" align="center">Наши курсы</td></tr>
         <tr>
             <td colspan="3" align="left">Сортировать по:
                 <a href="<?= $path('product_list') ?>?sort=price">Цене</a>
@@ -26,7 +24,8 @@ $body = function () use ($productList, $path) {
                 echo($position + 1) % 3 ? '' : '</tr>';
         ++$position;
     }
-    echo $position % 3 ? str_repeat('<td></td>', 3 - $position) . '</tr>' : ''; ?>
+    echo $position % 3 ? str_repeat('<td></td>', 3 - $position % 3) . '</tr>' : ''; ?>
+        <tr><td colspan="3" align="center"><a href="<?= $path('product_info_all')?>">Описание курсов</a></td></tr>
     </table>
 <?php
 };

@@ -11,7 +11,7 @@ $body = function () use ($productList, $path) {
     }
     echo '
     <br/>
-    <a href="' . $path('product_list') . '">Вернуться к товарам</a>
+    <a href="' . $path('product_list') . '">Посмотреть цены</a>
     <br />
     <br />
     ';
