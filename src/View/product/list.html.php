@@ -4,7 +4,9 @@
 $body = function () use ($productList, $path) {
     ?>
     <table cellpadding="40" cellspacing="0" border="0">
-        <tr><td colspan="3" align="center">Наши курсы</td></tr>
+        <tr><td colspan="3" align="center">
+                <a href="<?= $path('product_info_all') ?>">Наши курсы</a>
+            </td></tr>
         <tr>
             <td colspan="3" align="left">Сортировать по:
                 <a href="<?= $path('product_list') ?>?sort=price">Цене</a>

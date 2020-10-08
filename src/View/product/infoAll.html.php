@@ -1,36 +1,26 @@
 <?php
 
-use Service\SocialNetwork\ISocialNetwork;
-
-/** @var \Model\Entity\Product $productInfo */
-/** @var bool $isInBasket */
+/** @var \Model\Entity\Product[] $productList */
 /** @var \Closure $path */
-$body = function () use ($productInfo, $isInBasket, $path) {
-    echo  '
-        Супер ' . $productInfo->getName() . ' курс всего за ' . $productInfo->getPrice() . ' руб.
+$body = function () use ($productList, $path) {
+    foreach ($productList as $key => $product) {
+        echo '<a href="' . $path('product_info', ['id' => $product->getId()]) . '">' . $product->getName() . '</a>
         <br/><br/>
-        <form method="post">
-            <input name="product" type="hidden" value="' . $productInfo->getId() . '" />';
-    if (!$isInBasket) {
-        echo '<input type="submit" value="Положить в корзину" />';
-    } else {
-        echo 'Курс уже находит в корзине.<br/>';
+        ' . $product->getDescription() . '
+        <br/><br/>';
     }
     echo '
-        </form>
-        <br/>
-        <a href="' . $path('product_list') . '">Вернуться к списку</a>
-        <br />
-        <br />
-        <a href="' . $path('product_into_social_network', ['network' => ISocialNetwork::SOCIAL_NETWORK_VK]) . '?course=' . $productInfo->getName() . '&page_num=' . $productInfo->getId() . '">Поделиться в VK</a><br />
-        <a href="' . $path('product_into_social_network', ['network' => ISocialNetwork::SOCIAL_NETWORK_FACEBOOK]) . '?course=' . $productInfo->getName() . '&page_num=' . $productInfo->getId() . '">Поделиться в Facebook</a><br />
+    <br/>
+    <a href="' . $path('product_list') . '">Вернуться к товарам</a>
+    <br />
+    <br />
     ';
 };
 
 $renderLayout(
     'main_template.html.php',
     [
-        'title' => 'Курс ' . $productInfo->getName(),
+        'title' => 'Описание курсов',
         'body' => $body,
     ]
 );

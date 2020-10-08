@@ -14,7 +14,7 @@ $body = function () use ($productInfo, $isInBasket, $path) {
     if (!$isInBasket) {
         echo '<input type="submit" value="Положить в корзину" />';
     } else {
-        echo 'Курс уже находит в корзине.<br/>';
+        echo 'Курс уже находится в корзине.<br/>';
     }
     echo '
         </form>
