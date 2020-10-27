@@ -59,13 +59,11 @@ class ProductController
     /**
      * Описание всех продуктов
      *
-     * @param Request $request
-     *
      * @return Response
      */
-    public function infoAllAction(Request $request): Response
+    public function infoAllAction(): Response
     {
-        $productList = (new Product())->getAll($request->query->get('sort', ''));
+        $productList = (new Product())->getAll('');
 
         return $this->render('product/infoAll.html.php', ['productList' => $productList]);
     }

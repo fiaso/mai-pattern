@@ -34,9 +34,36 @@ class Security implements ISecurity
     /**
      * @inheritdoc
      */
+    public function getRole(): ?Model\Entity\Role
+    {
+        $userId = $this->session->get(self::SESSION_USER_IDENTITY);
+
+        return $userId ? (new Model\Repository\User())->getById($userId)->getRole() : null;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function isLogged(): bool
     {
         return $this->getUser() instanceof Model\Entity\User;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isAdmin(): bool
+    {
+        $role = $this->getRole();
+        if (is_null($role)) {
+            return false;
+        }
+
+        if ($role->getType() != 'admin') {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -69,6 +96,24 @@ class Security implements ISecurity
         $this->session->set(self::SESSION_USER_IDENTITY, null);
 
         // Здесь могут выполняться другие действия связанные с разлогиниванием пользователя
+    }
+
+    /**
+     * Получаем всех пользователей
+     *
+     * @param string $sortType
+     *
+     * @return Model\Entity\User[]
+     */
+    public function getAll(): array
+    {
+        $userList = $this->getUserRepository()->fetchAll();
+
+        // Применить паттерн Стратегия
+        // $sortType === 'price'; // Сортировка по цене
+        // $sortType === 'name'; // Сортировка по имени
+
+        return $userList;
     }
 
     /**

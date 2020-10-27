@@ -16,11 +16,26 @@ interface ISecurity
     public function getUser(): ?Model\Entity\User;
 
     /**
+     * Получаем роль пользователя по сессии
+     *
+     * @return Model\Entity\Role|null
+     */
+    public function getRole(): ?Model\Entity\Role;
+
+    /**
      * Проверяет, является ли пользователь авторизованным
      *
      * @return bool
      */
     public function isLogged(): bool;
+
+    /**
+     * Проверяет, является ли пользователь админом
+     *
+     * @return bool
+     */
+    public function isAdmin(): bool;
+
 
     /**
      * Производим операцию аутентификации

@@ -40,6 +40,19 @@ class UserController
     }
 
     /**
+     * Получаем информацию о пользователях
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function infoAction(Request $request): Response
+    {
+        $userList = (new Security($request->getSession()))->getAll();
+
+        return $this->render('user/list.html.php', ['userList' => $userList]);
+    }
+
+    /**
      * Выходим из системы
      *
      * @param Request $request
