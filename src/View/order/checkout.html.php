@@ -3,12 +3,12 @@
 /** @var \Model\Entity\Product[] $productList */
 /** @var bool $isLogged */
 /** @var \Closure $path */
-$body = function () use ($productList, $isLogged, $path) {
+$body = function () use ($productList, $isLogged, $price, $path) {
     ?>
     <form method="post">
         <table cellpadding="10">
             <tr>
-                <td colspan="3" align="center">Покупка успешно совершена</td>
+                <td colspan="3" align="center">Покупка на сумму <?= $price ?> руб успешно совершена</td>
             </tr>
         </table>
     </form>

@@ -25,10 +25,11 @@
                                 } else {
                                     if ($isAdmin) {
                                 ?>
-                                    <tr><td><a href="<?= $path('user_info') ?>">Все пользователи</a></td></tr>
+                                    <tr><td><a href="<?= $path('user_info_all') ?>">Все пользователи</a></td></tr>
                                 <?php
                                     }
                                 ?>
+                                    <tr><td><a href="<?= $path('user_info') ?>">Личный кабинет</a></td></tr>
                                     <tr><td><a href="<?= $path('logout') ?>">Выход</a></td></tr>
                                 <?php
                                 } ?>

@@ -49,8 +49,13 @@ $routes->add(
 );
 
 $routes->add(
+    'user_info_all',
+    new Route('/user/list', ['_controller' => [\Controller\UserController::class, 'infoAllAction']])
+);
+
+$routes->add(
     'user_info',
-    new Route('/user/list', ['_controller' => [\Controller\UserController::class, 'infoAction']])
+    new Route('/user/info', ['_controller' => [\Controller\UserController::class, 'infoAction']])
 );
 
 return $routes;

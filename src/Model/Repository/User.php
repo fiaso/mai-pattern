@@ -68,6 +68,7 @@ class User
         return new Entity\User(
             $user['id'],
             $user['name'],
+            $user['birthday'],
             $user['login'],
             $user['password'],
             new Entity\Role($role['id'], $role['title'], $role['role'])
@@ -91,6 +92,7 @@ class User
             [
                 'id' => 1,
                 'name' => 'Super Admin',
+                'birthday' => '10.11.1970',
                 'login' => 'root',
                 'password' => '$2y$10$GnZbayyccTIDIT5nceez7u7z1u6K.znlEf9Jb19CLGK0NGbaorw8W', // 1234
                 'role' => $admin
@@ -98,6 +100,7 @@ class User
             [
                 'id' => 2,
                 'name' => 'Doe John',
+                'birthday' => '18.12.1967',
                 'login' => 'doejohn',
                 'password' => '$2y$10$j4DX.lEvkVLVt6PoAXr6VuomG3YfnssrW0GA8808Dy5ydwND/n8DW', // qwerty
                 'role' => $user
@@ -105,6 +108,7 @@ class User
             [
                 'id' => 3,
                 'name' => 'Ivanov Ivan Ivanovich',
+                'birthday' => '31.07.1983',
                 'login' => 'i**3',
                 'password' => '$2y$10$TcQdU.qWG0s7XGeIqnhquOH/v3r2KKbes8bLIL6NFWpqfFn.cwWha', // PaSsWoRd
                 'role' => $user
@@ -112,6 +116,7 @@ class User
             [
                 'id' => 4,
                 'name' => 'Test Testov Testovich',
+                'birthday' => '01.01.1900',
                 'login' => 'testok',
                 'password' => '$2y$10$vQvuFc6vQQyon0IawbmUN.3cPBXmuaZYsVww5csFRLvLCLPTiYwMa', // testss
                 'role' => $test
@@ -119,6 +124,7 @@ class User
             [
                 'id' => 5,
                 'name' => 'Eternal Student',
+                'birthday' => '04.11.1998',
                 'login' => 'student',
                 'password' => '$2y$10$cEZ6uaQcbhfO1pvAD8ZUuOZdtoitLtxIZ08xmdqlaN8OI7S4ABvpG', // studylikelenin
                 'role' => $user

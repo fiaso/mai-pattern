@@ -9,8 +9,10 @@ use Service\Billing\Card;
 use Service\Billing\IBilling;
 use Service\Communication\Email;
 use Service\Communication\ICommunication;
+use Service\Discount\UserDiscount;
+use Service\Discount\PriceDiscount;
+use Service\Discount\ProductDiscount;
 use Service\Discount\IDiscount;
-use Service\Discount\NullObject;
 use Service\User\ISecurity;
 use Service\User\Security;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -77,22 +79,22 @@ class Basket
     /**
      * Оформление заказа
      *
-     * @return void
+     * @return float
      */
-    public function checkout(): void
+    public function checkout(): float
     {
         // Здесь должна быть некоторая логика выбора способа платежа
         $billing = new Card();
-
-        // Здесь должна быть некоторая логика получения информации о скидки пользователя
-        $discount = new NullObject();
 
         // Здесь должна быть некоторая логика получения способа уведомления пользователя о покупке
         $communication = new Email();
 
         $security = new Security($this->session);
+        $discount = new UserDiscount($security->getUser());
+        
+        
 
-        $this->checkoutProcess($discount, $billing, $security, $communication);
+        return $this->checkoutProcess($discount, $billing, $security, $communication);
     }
 
     /**
@@ -102,26 +104,39 @@ class Basket
      * @param IBilling $billing,
      * @param ISecurity $security,
      * @param ICommunication $communication
-     * @return void
+     * @return float
      */
     public function checkoutProcess(
         IDiscount $discount,
         IBilling $billing,
         ISecurity $security,
         ICommunication $communication
-    ): void {
+    ): float {
         $totalPrice = 0;
         foreach ($this->getProductsInfo() as $product) {
             $totalPrice += $product->getPrice();
+            $productDiscount = new ProductDiscount($product);
+            if ($discount->getDiscount() < $productDiscount->getDiscount()) {
+                $discount = $productDiscount;
+            }
         }
-
+        
+        $priceDiscount = new PriceDiscount($totalPrice);
+        if ($discount->getDiscount() < $priceDiscount->getDiscount()) {
+            $discount = $priceDiscount;
+        }
+        
         $discount = $discount->getDiscount();
+        
         $totalPrice = $totalPrice - $totalPrice / 100 * $discount;
 
         $billing->pay($totalPrice);
-
+        
         $user = $security->getUser();
+
         $communication->process($user, 'checkout_template');
+        
+        return $totalPrice;
     }
 
     /**

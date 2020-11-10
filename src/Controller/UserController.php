@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Controller;
 
 use Framework\Render;
+use Service\Order\History;
 use Service\User\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,11 +46,36 @@ class UserController
      * @param Request $request
      * @return Response
      */
-    public function infoAction(Request $request): Response
+    public function infoAllAction(Request $request): Response
     {
         $userList = (new Security($request->getSession()))->getAll();
 
         return $this->render('user/list.html.php', ['userList' => $userList]);
+    }
+    
+    /**
+     * Получаем информацию о пользователе
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function infoAction(Request $request): Response
+    {
+        $user = (new Security($request->getSession()))->getUser();
+        $userOrders = (new History())->getAllByUser($user->getId());
+        $lastOrder = null;
+        
+        if (count($userOrders) > 0) {
+            $lastOrder = $userOrders[0];
+            
+            foreach ($userOrders as $order) {
+                if ($order->getOrderDate() > $lastOrder->getOrderDate()) {
+                    $lastOrder = $order;
+                }
+            }
+        }
+        
+        return $this->render('user/info.html.php', ['user' => $user, 'lastOrder' => $lastOrder]);
     }
 
     /**
