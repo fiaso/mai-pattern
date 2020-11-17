@@ -6,14 +6,10 @@ namespace Service\Order;
 
 use Model;
 use Service\Billing\Card;
-use Service\Billing\IBilling;
 use Service\Communication\Email;
-use Service\Communication\ICommunication;
 use Service\Discount\UserDiscount;
 use Service\Discount\PriceDiscount;
 use Service\Discount\ProductDiscount;
-use Service\Discount\IDiscount;
-use Service\User\ISecurity;
 use Service\User\Security;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -133,38 +129,31 @@ class Basket
     public function checkout(): float
     {
         // Здесь должна быть некоторая логика выбора способа платежа
-        $billing = new Card();
-
+        $basketBuilder = new BasketBuilder();
+        $basketBuilder->setBilling(new Card());
         // Здесь должна быть некоторая логика получения способа уведомления пользователя о покупке
-        $communication = new Email();
+        $basketBuilder->setCommunication(new Email());
+        $basketBuilder->setSecurity(new Security($this->session));
 
-        $security = new Security($this->session);
-
-        return $this->checkoutProcess($billing, $security, $communication);
+        return $this->checkoutProcess($basketBuilder);
     }
 
     /**
      * Проведение всех этапов заказа
      *
-     * @param IBilling $billing,
-     * @param ISecurity $security,
-     * @param ICommunication $communication
+     * @param BasketBuilder $basketBuilder
      * @return float
      */
-    public function checkoutProcess(
-        IBilling $billing,
-        ISecurity $security,
-        ICommunication $communication
-    ): float {
+    public function checkoutProcess(BasketBuilder $basketBuilder): float {
         $totalPrice = $this->session->get(static::BASKET_PRICE_KEY, 0);
         $discount = $this->session->get(static::BASKET_DISCOUNT_KEY, 0);
         $totalPrice = $totalPrice - $totalPrice / 100 * $discount;
 
-        $billing->pay($totalPrice);
+        $basketBuilder->getBilling()->pay($totalPrice);
         
-        $user = $security->getUser();
+        $user = $basketBuilder->getSecurity()->getUser();
 
-        $communication->process($user, 'checkout_template');
+        $basketBuilder->getCommunication()->process($user, 'checkout_template');
 
         $this->resetBasket();
         return $totalPrice;

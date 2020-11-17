@@ -41,6 +41,20 @@ class Product
     }
 
     /**
+     * @param int $id
+     * @param string $name
+     * @param float $price
+     * @param string $description
+     */
+    public function setParams(int $id, string $name, float $price, string $description)
+    {
+        $this->id = $id;
+        $this->name = $name;
+        $this->price = $price;
+        $this->description = $description;
+    }
+
+    /**
      * @return int
      */
     public function getId(): int
