@@ -7,7 +7,7 @@ namespace Service\Discount;
 class PriceDiscount implements IDiscount
 {
     /**
-     * @var float 
+     * @var float
      */
     private $price;
 
@@ -27,7 +27,7 @@ class PriceDiscount implements IDiscount
         $discount = 0;
 
         if ($this->price > 40000) {
-          $discount = 10;
+            $discount = 10;
         }
 
         return $discount;

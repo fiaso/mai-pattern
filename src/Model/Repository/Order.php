@@ -93,9 +93,9 @@ class Order
     public function addNew(int $userId, float $totalPrice)
     {
         $order = [
-            'id' => count($this->dataSource), 
-            'userId' => $userId, 
-            'totalPrice' => $totalPrice, 
+            'id' => count($this->dataSource),
+            'userId' => $userId,
+            'totalPrice' => $totalPrice,
             'orderDate' => time(),
         ];
         array_push($this->dataSource, $order);

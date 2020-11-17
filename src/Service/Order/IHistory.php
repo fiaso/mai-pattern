@@ -12,6 +12,7 @@ namespace Service\Order;
  *
  * @author sofia
  */
-interface IHistory {
+interface IHistory
+{
     //put your code here
 }

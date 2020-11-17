@@ -21,9 +21,9 @@ class Order
      */
     private $totalPrice;
     
-     /**
-     * @var int
-     */
+    /**
+    * @var int
+    */
     private $orderDate;
 
     /**

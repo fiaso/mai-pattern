@@ -9,7 +9,7 @@ use Model;
 class UserDiscount implements IDiscount
 {
     /**
-     * @var Model\Entity\User 
+     * @var Model\Entity\User
      */
     private $user;
 
@@ -34,7 +34,7 @@ class UserDiscount implements IDiscount
         $now=time();
 
         if (($now >= strtotime($startdate)) && ($now < strtotime($enddate))) {
-          $discount = 5;
+            $discount = 5;
         }
 
         return $discount;

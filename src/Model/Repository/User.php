@@ -49,7 +49,8 @@ class User
     {
         $userList = [];
         foreach ($this->getDataFromSource() as $user) {
-            $userList[] = $this->createUser($user);;
+            $userList[] = $this->createUser($user);
+            ;
         }
 
         return $userList;
@@ -124,7 +125,7 @@ class User
             [
                 'id' => 5,
                 'name' => 'Eternal Student',
-                'birthday' => '04.11.1998',
+                'birthday' => '13.11.1998',
                 'login' => 'student',
                 'password' => '$2y$10$cEZ6uaQcbhfO1pvAD8ZUuOZdtoitLtxIZ08xmdqlaN8OI7S4ABvpG', // studylikelenin
                 'role' => $user

@@ -26,10 +26,18 @@ class OrderController
             return $this->redirect('order_checkout');
         }
 
-        $productList = (new Basket($request->getSession()))->getProductsInfo();
+        $basket = new Basket($request->getSession());
+        $productList = $basket->getProductsInfo();
+        $price = $basket->calculatePrice();
+        $discount = $basket->checkDiscount();
         $isLogged = (new Security($request->getSession()))->isLogged();
 
-        return $this->render('order/info.html.php', ['productList' => $productList, 'isLogged' => $isLogged]);
+        return $this->render('order/info.html.php', [
+            'productList' => $productList,
+            'price' => $price,
+            'discount' => $discount,
+            'isLogged' => $isLogged
+        ]);
     }
 
     /**

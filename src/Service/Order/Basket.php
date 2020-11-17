@@ -23,6 +23,8 @@ class Basket
      * Сессионный ключ списка всех продуктов корзины
      */
     private const BASKET_DATA_KEY = 'basket';
+    private const BASKET_PRICE_KEY = 'price';
+    private const BASKET_DISCOUNT_KEY = 'discount';
 
     /**
      * @var SessionInterface
@@ -77,6 +79,53 @@ class Basket
     }
 
     /**
+     * Подсчет итоговой суммы
+     *
+     * @return float
+     */
+    public function calculatePrice(): float
+    {
+        $totalPrice = 0;
+        foreach ($this->getProductsInfo() as $product) {
+            $totalPrice += $product->getPrice();
+        }
+
+        $this->session->set(static::BASKET_PRICE_KEY, $totalPrice);
+        return $totalPrice;
+    }
+
+    /**
+     * Подсчет скидки
+     *
+     * @return float
+     */
+    public function checkDiscount(): float
+    {
+        $security = new Security($this->session);
+        $price = $this->session->get(static::BASKET_PRICE_KEY, 0);
+        if ($security->getUser() == null || $price == 0) {
+            return 0;
+        }
+        
+        $discount = new UserDiscount($security->getUser());
+
+        foreach ($this->getProductsInfo() as $product) {
+            $productDiscount = new ProductDiscount($product);
+            if ($discount->getDiscount() < $productDiscount->getDiscount()) {
+                $discount = $productDiscount;
+            }
+        }
+
+        $priceDiscount = new PriceDiscount($price);
+        if ($discount->getDiscount() < $priceDiscount->getDiscount()) {
+            $discount = $priceDiscount;
+        }
+
+        $this->session->set(static::BASKET_DISCOUNT_KEY, $discount->getDiscount());
+        return $discount->getDiscount();
+    }
+
+    /**
      * Оформление заказа
      *
      * @return float
@@ -90,44 +139,25 @@ class Basket
         $communication = new Email();
 
         $security = new Security($this->session);
-        $discount = new UserDiscount($security->getUser());
-        
-        
 
-        return $this->checkoutProcess($discount, $billing, $security, $communication);
+        return $this->checkoutProcess($billing, $security, $communication);
     }
 
     /**
      * Проведение всех этапов заказа
      *
-     * @param IDiscount $discount,
      * @param IBilling $billing,
      * @param ISecurity $security,
      * @param ICommunication $communication
      * @return float
      */
     public function checkoutProcess(
-        IDiscount $discount,
         IBilling $billing,
         ISecurity $security,
         ICommunication $communication
     ): float {
-        $totalPrice = 0;
-        foreach ($this->getProductsInfo() as $product) {
-            $totalPrice += $product->getPrice();
-            $productDiscount = new ProductDiscount($product);
-            if ($discount->getDiscount() < $productDiscount->getDiscount()) {
-                $discount = $productDiscount;
-            }
-        }
-        
-        $priceDiscount = new PriceDiscount($totalPrice);
-        if ($discount->getDiscount() < $priceDiscount->getDiscount()) {
-            $discount = $priceDiscount;
-        }
-        
-        $discount = $discount->getDiscount();
-        
+        $totalPrice = $this->session->get(static::BASKET_PRICE_KEY, 0);
+        $discount = $this->session->get(static::BASKET_DISCOUNT_KEY, 0);
         $totalPrice = $totalPrice - $totalPrice / 100 * $discount;
 
         $billing->pay($totalPrice);
@@ -135,7 +165,8 @@ class Basket
         $user = $security->getUser();
 
         $communication->process($user, 'checkout_template');
-        
+
+        $this->resetBasket();
         return $totalPrice;
     }
 
@@ -157,5 +188,18 @@ class Basket
     private function getProductIds(): array
     {
         return $this->session->get(static::BASKET_DATA_KEY, []);
+    }
+
+    /**
+     * Сброс заказа
+     *
+     *
+     * @return void
+     */
+    public function resetBasket(): void
+    {
+        $this->session->set(static::BASKET_DATA_KEY, []);
+        $this->session->set(static::BASKET_PRICE_KEY, 0);
+        $this->session->set(static::BASKET_DISCOUNT_KEY, 0);
     }
 }

@@ -6,7 +6,8 @@ namespace Service\Order;
 
 use Model;
 
-class History{
+class History
+{
     
     /**
      * Получаем все заказы пользователя
@@ -43,4 +44,3 @@ class History{
         return new Model\Repository\Order();
     }
 }
-

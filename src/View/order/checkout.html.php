@@ -1,6 +1,7 @@
 <?php
 
 /** @var \Model\Entity\Product[] $productList */
+/** @var float $price */
 /** @var bool $isLogged */
 /** @var \Closure $path */
 $body = function () use ($productList, $isLogged, $price, $path) {

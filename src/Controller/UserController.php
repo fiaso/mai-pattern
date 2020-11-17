@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Controller;
 
 use Framework\Render;
+use Service\Order\Basket;
 use Service\Order\History;
 use Service\User\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,6 +88,7 @@ class UserController
     public function logoutAction(Request $request): Response
     {
         (new Security($request->getSession()))->logout();
+        (new Basket($request->getSession()))->resetBasket();
 
         return $this->redirect('index');
     }
