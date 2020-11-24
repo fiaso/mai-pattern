@@ -122,39 +122,15 @@ class Basket
     }
 
     /**
-     * Оформление заказа
+     * Переход к покупке
      *
      * @return float
      */
     public function checkout(): float
     {
-        // Здесь должна быть некоторая логика выбора способа платежа
-        $basketBuilder = new BasketBuilder();
-        $basketBuilder->setBilling(new Card());
-        // Здесь должна быть некоторая логика получения способа уведомления пользователя о покупке
-        $basketBuilder->setCommunication(new Email());
-        $basketBuilder->setSecurity(new Security($this->session));
-
-        return $this->checkoutProcess($basketBuilder);
-    }
-
-    /**
-     * Проведение всех этапов заказа
-     *
-     * @param BasketBuilder $basketBuilder
-     * @return float
-     */
-    public function checkoutProcess(BasketBuilder $basketBuilder): float {
         $totalPrice = $this->session->get(static::BASKET_PRICE_KEY, 0);
         $discount = $this->session->get(static::BASKET_DISCOUNT_KEY, 0);
-        $totalPrice = $totalPrice - $totalPrice / 100 * $discount;
-
-        $basketBuilder->getBilling()->pay($totalPrice);
-        
-        $user = $basketBuilder->getSecurity()->getUser();
-
-        $basketBuilder->getCommunication()->process($user, 'checkout_template');
-
+        $totalPrice = (new OrderFacade($this->session))->checkout($totalPrice, $discount);
         $this->resetBasket();
         return $totalPrice;
     }

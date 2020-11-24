@@ -14,6 +14,40 @@ class BasketBuilder
     private $billing;
     private $security;
     private $communication;
+    private $totalPrice;
+    private $discount;
+
+    /**
+     * @return float
+     */
+    public function getDiscount(): float
+    {
+        return $this->discount;
+    }
+
+    /**
+     * @param float $discount
+     */
+    public function setDiscount($discount): void
+    {
+        $this->discount = $discount;
+    }
+
+    /**
+     * @param float $totalPrice
+     */
+    public function setTotalPrice($totalPrice): void
+    {
+        $this->totalPrice = $totalPrice;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTotalPrice(): float
+    {
+        return $this->totalPrice;
+    }
 
     /**
      * @param IBilling $billing
