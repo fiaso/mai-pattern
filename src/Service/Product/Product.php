@@ -29,11 +29,14 @@ class Product
      */
     public function getAll(string $sortType): array
     {
-        $productList = $this->getProductRepository()->fetchAll();
+        $products = $this->getProductRepository();
 
-        // Применить паттерн Стратегия
-        // $sortType === 'price'; // Сортировка по цене
-        // $sortType === 'name'; // Сортировка по имени
+        if ($sortType == '') {
+            return $products->fetchAll();
+        }
+        
+        $sorter = new SortContext($sortType);
+        $productList= $sorter->sort($products);
 
         return $productList;
     }
